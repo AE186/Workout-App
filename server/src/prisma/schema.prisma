@@ -23,7 +23,7 @@ model workout{
   id String @id @default(uuid())
   name String
   desc String
-  targets target[] 
+  muscles muscle[] 
   equipments equipment[]
   tips tip[]
   plans plan[]
@@ -45,7 +45,7 @@ model exercise{
   plans plan[]
 }
 
-model target{
+model muscle{
   id String @id @default(uuid())
   name String
   workouts workout[]

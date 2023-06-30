@@ -45,7 +45,10 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.log(error.msg);
-    res.sendStatus(500);
+    res.json({
+      success: false,
+      token: "",
+    });
   }
 };
 

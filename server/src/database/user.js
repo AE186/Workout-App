@@ -1,4 +1,3 @@
-const { Prisma } = require('.prisma/client')
 const db = require('./db')
 
 exports.createUser = async (name, email, password, dob) => {
