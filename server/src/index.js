@@ -8,17 +8,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const verifyController = require("./controllers/verifyController");
+
 // routers
-const userRouter = require('./routes/userRouter')
-const equipmentRouter = require('./routes/equipmentRouter')
+const userRouter = require("./routes/userRouter");
+const equipmentRouter = require("./routes/equipmentRouter");
 const exerciseRouter = require("./routes/exerciseRouter");
 const muscleRouter = require("./routes/muscleRouter");
 
 // routes
-app.use('/users', userRouter)
-app.use('/equipments', equipmentRouter)
-app.use("/exercises", exerciseRouter);
-app.use("/muscles", muscleRouter);
+app.use("/users", userRouter);
+app.use("/equipments", [verifyController.verifyToken], equipmentRouter);
+app.use("/exercises", [verifyController.verifyToken], exerciseRouter);
+app.use("/muscles", [verifyController.verifyToken], muscleRouter);
 
 // listening
 app.listen(process.env.PORT, () => {

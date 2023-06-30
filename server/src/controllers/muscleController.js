@@ -25,7 +25,7 @@ exports.createMuscle = async (req, res) => {
 exports.getMuscle = async (req, res) => {
   try {
     const muscles = await muscleService.getAllMuscles();
-
+    
     res.json(muscles);
   } catch (error) {
     console.log(error);
