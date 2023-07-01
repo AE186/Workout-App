@@ -64,3 +64,50 @@ exports.getUser = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+const favoriteSchema = Joi.object({
+  workoutId: Joi.string().required(),
+});
+
+exports.addFavoriteWorkout = async (req, res) => {
+  const { workoutId } = req.body;
+
+  try {
+    const { error } = await favoriteSchema.validateAsync(req.body);
+    if (error) throw error;
+
+    await userService.addFavoriteWorkout(req.user.id, workoutId);
+
+    res.send("Favorite Workout added");
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+exports.removeFavoriteWorkout = async (req, res) => {
+  const { workoutId } = req.body;
+
+  try {
+    const { error } = await favoriteSchema.validateAsync(req.body);
+    if (error) throw error;
+
+    await userService.removeFavoriteWorkout(req.user.id, workoutId);
+
+    res.send("Favorite Workout removed");
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+exports.getFavoriteWorkouts = async (req, res) => {
+  try {
+    const favorites = await userService.getFavoriteWorkouts(req.user.id);
+
+    res.json(favorites);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};

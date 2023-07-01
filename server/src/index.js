@@ -15,12 +15,14 @@ const userRouter = require("./routes/userRouter");
 const equipmentRouter = require("./routes/equipmentRouter");
 const exerciseRouter = require("./routes/exerciseRouter");
 const muscleRouter = require("./routes/muscleRouter");
+const workoutRouter = require("./routes/workoutRouter");
 
 // routes
 app.use("/users", userRouter);
 app.use("/equipments", [verifyController.verifyToken], equipmentRouter);
 app.use("/exercises", [verifyController.verifyToken], exerciseRouter);
 app.use("/muscles", [verifyController.verifyToken], muscleRouter);
+app.use("/workouts", [verifyController.verifyToken], workoutRouter);
 
 // listening
 app.listen(process.env.PORT, () => {
