@@ -1,6 +1,6 @@
 const db = require("./db");
 
-exports.createUser = async (name, email, password, dob) => {
+exports.create = async (name, email, password, dob) => {
   const user = await db.user.create({
     data: {
       name: name,
@@ -14,13 +14,13 @@ exports.createUser = async (name, email, password, dob) => {
 };
 
 exports.checkUserExists = async (email) => {
-  const users = await db.user.findMany({
+  const user = await db.user.findFirst({
     where: {
       email: email,
     },
   });
 
-  return users.length > 0;
+  return users ? true : false;
 };
 
 exports.getUserWithEmail = async (email) => {
@@ -39,7 +39,6 @@ exports.getUserWithId = async (id) => {
       id: id,
     },
     select: {
-      id: true,
       name: true,
       email: true,
       dob: true,

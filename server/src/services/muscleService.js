@@ -1,4 +1,4 @@
-const muscle = require("../database/muscle");
+const muscle = require("../data/muscle");
 
 exports.createMuscle = async (name) => {
   return await muscle.create(name);

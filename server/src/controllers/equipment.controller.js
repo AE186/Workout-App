@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const Equipment = require("../data/equipment");
 
 const equipmentService = require("../services/equipmentService");
 
@@ -10,26 +11,34 @@ exports.createEquipment = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const { error } = await equipmentCreateSchema.validateAsync(req.body);
-    if (error) throw error;
+    const { error } = equipmentCreateSchema.validate(req.body);
+    if (error)
+      return res
+        .status(400)
+        .send({ success: false, error: "Invalid inputs provided" });
 
-    const equipment = await equipmentService.createEquipment(name);
+    if (Equipment.getWithName(name))
+      return res
+        .status(400)
+        .send({ success: false, error: "Equipment already Exists" });
 
-    res.json(equipment);
+    const equipment = await Equipment.create(name);
+
+    return res.send({ success: true, equipment });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.status(500).send({ success: false, error });
   }
 };
 
 exports.getEquipment = async (req, res) => {
   try {
-    const equipments = await equipmentService.getAllEquipments();
+    const equipments = await Equipment.getAll();
 
-    res.json(equipments);
+    return res.send({ success: true, equipments });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.status(500).send({ success: false, error });
   }
 };
 

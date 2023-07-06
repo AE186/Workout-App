@@ -1,4 +1,4 @@
-const workout = require("../database/workout");
+const workout = require("../data/workout");
 
 exports.createWorkout = async (
   name,

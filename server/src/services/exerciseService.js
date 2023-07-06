@@ -1,4 +1,4 @@
-const exercise = require("../database/exercise");
+const exercise = require("../data/exercise");
 
 exports.createExercise = async (name) => {
   return await exercise.create(name);

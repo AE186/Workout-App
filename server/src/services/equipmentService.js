@@ -1,4 +1,4 @@
-const equipment = require("../database/equipment");
+const equipment = require("../data/equipment");
 
 exports.createEquipment = async (name) => {
   return await equipment.create(name);

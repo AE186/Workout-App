@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const user = require("../database/user");
+const user = require("../data/user");
 
 exports.createUser = async (name, email, password, dob) => {
   if (await user.checkUserExists(email)) throw new Error("User already Exists");

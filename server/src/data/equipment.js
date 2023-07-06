@@ -10,6 +10,15 @@ exports.create = async (name) => {
   return equipment;
 };
 
+exports.getWithName = async (name) => {
+  const equipment = await db.equipment.findFirst({
+    where: {
+      name: name,
+    },
+  });
+  return equipment;
+};
+
 exports.getAll = async () => {
   const equipments = await db.equipment.findMany();
   return equipments;
