@@ -1,8 +1,8 @@
 const Joi = require("joi");
-
+const Exercises = require("../data/exercise");
 const exerciseService = require("../services/exerciseService");
 
-const exerciseCreateSchema = Joi.object({
+const exerciseSchema = Joi.object({
   name: Joi.string().min(3).required(),
 });
 
@@ -10,47 +10,58 @@ exports.createExercise = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const { error } = await exerciseCreateSchema.validateAsync(req.body);
-    if (error) throw error;
+    const { error } = await exerciseSchema.validate(req.body);
+    if (error)
+      return res
+        .status(400)
+        .send({ success: false, error: "Invalid Inputs provided" });
 
-    const exercise = await exerciseService.createExercise(name);
+    if (await Exercises.getWithName(name))
+      return res
+        .status(400)
+        .send({ success: false, error: "Exercise Already Exists" });
 
-    res.json(exercise);
+    const exercise = await Exercises.create(name);
+
+    res.send({ success: true, exercise });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };
 
 exports.getExercise = async (req, res) => {
   try {
-    const exercises = await exerciseService.getAllExercises();
+    const exercises = await Exercises.getAll();
 
-    res.json(exercises);
+    res.send({ success: true, exercises });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };
 
-const exerciseUpdateSchema = Joi.object({
-  id: Joi.string().min(10).required(),
-  name: Joi.string().min(3).required(),
-});
-
 exports.updateExercise = async (req, res) => {
-  const { id, name } = req.body;
+  const { name } = req.body;
+  const { id } = req.params;
 
   try {
-    const { error } = await exerciseUpdateSchema.validateAsync(req.body);
-    if (error) throw error;
+    const { error } = await exerciseSchema.validate(req.body);
+    if (error)
+      return res
+        .status(400)
+        .send({ success: false, error: "Invalid Inputs provided" });
+    
+    if(!(await Exercises.getWithId(id)))return res
+      .status(400)
+      .send({ success: false, error: "Exercise Not Found!" });
 
-    const exercise = await exerciseService.updateExercise(id, name);
+    const exercise = await Exercises.update(id, name);
 
-    res.json(exercise);
+    res.send({success:true, exercise});
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };
 
@@ -58,11 +69,16 @@ exports.deleteExercise = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await exerciseService.deleteExercise(id);
+    if (!(await Exercises.getWithId(id)))
+      return res
+        .status(400)
+        .send({ success: false, error: "Exercise Not Found!" });
+        
+    await Exercises.delete(id);
 
-    res.send("Exercise Deleted");
+    res.send({success:true, message:"Exercise Deleted"});
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };

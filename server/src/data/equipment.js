@@ -24,6 +24,11 @@ exports.getAll = async () => {
   return equipments;
 };
 
+exports.getWithId = async (id) => {
+  const equipment = await db.equipment.findFirst({ where: { id: id } });
+  return equipment;
+};
+
 exports.update = async (id, name) => {
   const equipmentUpdated = await db.equipment.update({
     where: {

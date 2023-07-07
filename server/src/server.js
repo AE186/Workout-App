@@ -8,6 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Use all routes in ./routes directory
 fs.readdir("./src/routes", (err, files) => {
   files.forEach((file) => {
     app.use("/api/", require("./routes/" + file));

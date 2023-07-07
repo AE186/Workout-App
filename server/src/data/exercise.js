@@ -15,6 +15,16 @@ exports.getAll = async () => {
   return exercises;
 };
 
+exports.getWithName = async (name) => {
+  const exercise = await db.exercise.findFirst({ where: { name: name } });
+  return exercise;
+};
+
+exports.getWithId = async (id) => {
+  const exercise = await db.exercise.findFirst({ where: { id: id } });
+  return exercise;
+}
+
 exports.update = async (id, name) => {
   const exerciseUpdated = await db.exercise.update({
     where: {
