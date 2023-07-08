@@ -15,6 +15,16 @@ exports.getAll = async () => {
   return muscles;
 };
 
+exports.getWithName = async (name) => {
+  const muscle = await db.muscle.findFirst({ where: { name: name } });
+  return muscle;
+};
+
+exports.getWithId = async (id) => {
+  const muscle = await db.muscle.findFirst({ where: { id: id } });
+  return muscle;
+};
+
 exports.update = async (id, name) => {
   const muscleUpdated = await db.muscle.update({
     where: {

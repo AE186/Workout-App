@@ -1,23 +1,17 @@
-const Joi = require("joi");
 const Equipments = require("../data/equipment");
-
-const equipmentService = require("../services/equipmentService");
-
-const equipmentSchema = Joi.object({
-  name: Joi.string().min(3).required(),
-});
+const validation = require("../validation/equipment");
 
 exports.createEquipment = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const { error } = equipmentSchema.validate(req.body);
+    const { error } = validation.equipment.validate(req.body);
     if (error)
-      return res
-        .status(400)
-        .send({ success: false, error: "Invalid inputs provided" });
-    
-    console.log(await Equipments.getWithName(name), " Equipment Create")
+      return res.status(400).send({
+        success: false,
+        error: error.details.map(({ message }) => message),
+      });
+
     if (await Equipments.getWithName(name))
       return res
         .status(400)
@@ -48,16 +42,22 @@ exports.updateEquipment = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { error } = equipmentSchema.validate(req.body);
+    const { error } = validation.equipment.validate(req.body);
     if (error)
-      return res
-        .status(400)
-        .send({ success: false, error: "Invalid inputs provided" });
+      return res.status(400).send({
+        success: false,
+        error: error.details.map(({ message }) => message),
+      });
 
     if (!(await Equipments.getWithId(id)))
       return res
         .status(400)
         .send({ success: false, error: "Equipment Not Found!" });
+
+    if (await Equipments.getWithName(name))
+      return res
+        .status(400)
+        .send({ success: false, error: "Equipment already Exists" });
 
     const equipment = await Equipments.update(id, name);
 
@@ -79,7 +79,7 @@ exports.deleteEquipment = async (req, res) => {
 
     await Equipments.delete(id);
 
-    res.send({ success: true, message:"Equipment deleted successfully" });
+    res.send({ success: true, message: "Equipment deleted successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ success: false, error });

@@ -6,12 +6,20 @@ exports.verifyToken = async (req, res, next) => {
     const token = req.headers["access-token"];
 
     const userToken = jwt.verify(token, process.env.SECRET_TOKEN);
-    user = await Users.getUserWithId(userToken.id);
+    
+    if (!userToken.id)
+      return res.status(400).send({ success: false, error: "Invalid Token" });
+
+    const user = await Users.getUserWithId(userToken.id);
+
+    if (!user)
+      return res.status(400).send({ success: false, error: "User Not Found" });
+
     req.user = user;
 
     next();
   } catch (error) {
     console.log(error);
-    res.status(400).send({ success: false, error: "Invalid User" });
+    res.status(500).send({ success: false, error: "Access Denied" });
   }
 };

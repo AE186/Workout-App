@@ -1,56 +1,70 @@
-const Joi = require("joi");
-
-const muscleService = require("../services/muscleService");
-
-const muscleCreateSchema = Joi.object({
-  name: Joi.string().min(3).required(),
-});
+const Muscles = require("../data/muscle");
+const validation = require("../validation/muscle");
 
 exports.createMuscle = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const { error } = await muscleCreateSchema.validateAsync(req.body);
-    if (error) throw error;
+    const { error } = await validation.muscle.validate(req.body);
+    if (error)
+      return res.status(400).send({
+        success: false,
+        error: error.details.map(({ message }) => message),
+      });
 
-    const muscle = await muscleService.createMuscle(name);
+    if (await Muscles.getWithName(name))
+      return res
+        .status(400)
+        .send({ success: false, error: "Muscle group already exists" });
 
-    res.json(muscle);
+    const muscle = await Muscles.create(name);
+
+    res.send({ success: true, muscle });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };
 
 exports.getMuscle = async (req, res) => {
   try {
-    const muscles = await muscleService.getAllMuscles();
-    
-    res.json(muscles);
+    const muscles = await Muscles.getAll();
+
+    res.send({ success: true, muscles });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };
 
-const muscleUpdateSchema = Joi.object({
-  id: Joi.string().min(10).required(),
-  name: Joi.string().min(3).required(),
-});
-
 exports.updateMuscle = async (req, res) => {
-  const { id, name } = req.body;
+  const { name } = req.body;
+  const { id } = req.params;
 
   try {
-    const { error } = await muscleUpdateSchema.validateAsync(req.body);
-    if (error) throw error;
+    const { error } = await validation.muscle.validate(req.body);
+    if (error)
+      return res.status(400).send({
+        success: false,
+        error: error.details.map(({ message }) => message),
+      });
 
-    const muscle = await muscleService.updateMuscle(id, name);
+    if (!(await Muscles.getWithId(id)))
+      return res
+        .status(400)
+        .send({ success: false, error: "Muscles group Not Found" });
 
-    res.json(muscle);
+    if (await Muscles.getWithName(name))
+      return res
+        .status(400)
+        .send({ success: false, error: "Muscle group already exists" });
+
+    const muscle = await Muscles.update(id, name);
+
+    res.send({ success: true, muscle });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };
 
@@ -58,11 +72,16 @@ exports.deleteMuscle = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await muscleService.deleteMuscle(id);
+    if (!(await Muscles.getWithId(id)))
+      return res
+        .status(400)
+        .send({ success: false, error: "Muscles group Not Found" });
 
-    res.send("Muscle Deleted");
+    await Muscles.delete(id);
+
+    res.send({ success: true, message: "Muscle group Deleted" });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send({ success: false, error });
   }
 };

@@ -39,6 +39,7 @@ exports.getUserWithId = async (id) => {
       id: id,
     },
     select: {
+      id: true,
       name: true,
       email: true,
       dob: true,
@@ -75,7 +76,7 @@ exports.removeFavoriteWorkout = async (id, workoutId) => {
 };
 
 exports.getFavoriteWorkouts = async (id) => {
-  const favorites = await db.user.findMany({
+  const favorites = await db.user.findFirst({
     where: { id: id },
     select: {
       favorites: {

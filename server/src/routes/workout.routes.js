@@ -4,12 +4,12 @@ const auth = require("../middleware/auth")
 
 const router = express.Router();
 
-router.post("/", auth.verifyToken, controller.createWorkout);
+router.post("/workouts/", auth.verifyToken, controller.createWorkout);
 
-router.get("/", controller.getWorkout);
+router.get("/workouts/", controller.getWorkout);
 
-router.put("/:id", auth.verifyToken, controller.updateWorkout);
+router.put("/workouts/:id", auth.verifyToken, controller.updateWorkout);
 
-router.delete("/:id", auth.verifyToken, controller.deleteWorkout);
+router.delete("/workouts/:id", auth.verifyToken, controller.deleteWorkout);
 
 module.exports = router;

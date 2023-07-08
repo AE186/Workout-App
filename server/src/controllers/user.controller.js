@@ -1,21 +1,14 @@
-const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Users = require("../data/user");
-const userService = require("../services/userService");
-
-const signupSchema = Joi.object({
-  name: Joi.string().min(3).required(),
-  email: Joi.string().email().min(3).required(),
-  password: Joi.string().min(3).required(),
-  dob: Joi.date().required(),
-});
+const Workouts = require("../data/workout");
+const validation = require("../validation/user");
 
 exports.signup = async (req, res) => {
   const { name, email, password, dob } = req.body;
 
   try {
-    const { error } = await signupSchema.validate(req.body);
+    const { error } = await validation.signup.validate(req.body);
     if (error)
       return res
         .status(400)
@@ -37,16 +30,11 @@ exports.signup = async (req, res) => {
   }
 };
 
-const loginSchema = Joi.object({
-  email: Joi.string().email().min(3).required(),
-  password: Joi.string().min(3).required(),
-});
-
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const { error } = await loginSchema.validate(req.body);
+    const { error } = await validation.login.validate(req.body);
     if (error)
       return res
         .status(400)
@@ -97,49 +85,49 @@ exports.getUser = async (req, res) => {
   }
 };
 
-const favoriteSchema = Joi.object({
-  workoutId: Joi.string().required(),
-});
-
 exports.addFavoriteWorkout = async (req, res) => {
-  const { workoutId } = req.body;
+  const { id } = req.params;
 
   try {
-    const { error } = await favoriteSchema.validateAsync(req.body);
-    if (error) throw error;
+    if (!(await Workouts.getWithId(id)) || !id)
+      return res
+        .status(400)
+        .send({ success: false, error: "Workout Not Found" });
 
-    await userService.addFavoriteWorkout(req.user.id, workoutId);
+    await Users.addFavoriteWorkout(req.user.id, id);
 
-    res.send("Favorite Workout added");
+    res.send({ success: true, message: "Favorite Workout added" });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.status(500).send({ success: false, error });
   }
 };
 
 exports.removeFavoriteWorkout = async (req, res) => {
-  const { workoutId } = req.body;
+  const { id } = req.params;
 
   try {
-    const { error } = await favoriteSchema.validateAsync(req.body);
-    if (error) throw error;
+    if (!(await Workouts.getWithId(id)) || !id)
+      return res
+        .status(400)
+        .send({ success: false, error: "Workout Not Found" });
 
-    await userService.removeFavoriteWorkout(req.user.id, workoutId);
+    await Users.removeFavoriteWorkout(req.user.id, id);
 
-    res.send("Favorite Workout removed");
+    res.send({ success: true, message: "Favorite Workout removed" });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.status(500).send({ success: false, error });
   }
 };
 
 exports.getFavoriteWorkouts = async (req, res) => {
   try {
-    const favorites = await userService.getFavoriteWorkouts(req.user.id);
+    const workouts = await Users.getFavoriteWorkouts(req.user.id);
 
-    res.json(favorites);
+    res.send({ success: true, workouts: workouts.favorites });
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
+    return res.status(500).send({ success: false, error });
   }
 };
