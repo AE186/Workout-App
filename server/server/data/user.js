@@ -75,33 +75,66 @@ exports.removeFavoriteWorkout = async (id, workoutId) => {
   });
 };
 
+const select = {
+  id: true,
+  name: true,
+  desc: true,
+  userId: true,
+  muscles: true,
+  equipments: true,
+  tips: true,
+  plans: {
+    select: {
+      id: true,
+      sets: true,
+      reps: true,
+      exercise: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  },
+  comments: {
+    select: {
+      id: true,
+      comment: true,
+      removed: true,
+      userId: true,
+      createdAt: true,
+      replies: {
+        select: {
+          id: true,
+          reply: true,
+          removed: true,
+          userId: true,
+          createdAt: true,
+        },
+      },
+    },
+  },
+};
+
 exports.getFavoriteWorkouts = async (id) => {
   const favorites = await db.user.findFirst({
     where: { id: id },
     select: {
       favorites: {
-        select: {
-          id: true,
-          name: true,
-          desc: true,
-          userId: true,
-          muscles: true,
-          equipments: true,
-          tips: true,
-          plans: {
-            select: {
-              id: true,
-              sets: true,
-              reps: true,
-              exercise: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
+        select,
+      },
+    },
+  });
+
+  return favorites;
+};
+
+exports.getWorkouts = async (id) => {
+  const favorites = await db.user.findFirst({
+    where: { id: id },
+    select: {
+      workouts: {
+        select,
       },
     },
   });

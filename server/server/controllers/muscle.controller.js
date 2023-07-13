@@ -9,7 +9,7 @@ exports.createMuscle = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: error.details.map(({ message }) => message),
+        error: "Please provide valid inputs",
       });
 
     if (await Muscles.getWithName(name))
@@ -46,7 +46,7 @@ exports.updateMuscle = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: error.details.map(({ message }) => message),
+        error: "Please provide valid inputs",
       });
 
     if (!(await Muscles.getWithId(id)))

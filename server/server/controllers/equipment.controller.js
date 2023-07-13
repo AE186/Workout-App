@@ -9,7 +9,7 @@ exports.createEquipment = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: error.details.map(({ message }) => message),
+        error: c,
       });
 
     if (await Equipments.getWithName(name))
@@ -46,7 +46,7 @@ exports.updateEquipment = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: error.details.map(({ message }) => message),
+        error: "Please provide valid inputs",
       });
 
     if (!(await Equipments.getWithId(id)))

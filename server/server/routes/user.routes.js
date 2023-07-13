@@ -10,6 +10,8 @@ router.post("/login", controller.login);
 
 router.get("/auth/:token", controller.getUser);
 
+router.get("/user/workouts", auth.verifyToken, controller.getWorkouts);
+
 router.patch(
   "/favorite/add/:id",
   [auth.verifyToken],

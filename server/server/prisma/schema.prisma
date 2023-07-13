@@ -19,6 +19,8 @@ model user{
   type String @default("BASIC")
   workouts workout[] @relation(name: "myWorkouts")
   favorites workout[] @relation(name: "favorite")
+  comments comment[]
+  replies reply[]
 }
 
 model workout{
@@ -32,6 +34,7 @@ model workout{
   equipments equipment[]
   tips tip[]
   plans plan[]
+  comments comment[]
 }
 
 model exercise{
@@ -67,4 +70,29 @@ model tip{
   tip String
   workout workout @relation(fields: [workoutId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   workoutId String
+}
+
+model comment{
+  id String @id @default(uuid())
+  comment String
+  removed Boolean @default(false)
+  user user @relation(fields: [userId], references: [id])
+  userId String 
+  workout workout @relation(fields: [workoutId], references: [id])
+  workoutId String 
+  replies reply[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model reply{
+  id String @id @default(uuid())
+  reply String
+  removed Boolean @default(false)
+  user user @relation(fields: [userId], references: [id])
+  userId String 
+  comment comment @relation(fields: [commentId], references: [id])
+  commentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -131,3 +131,14 @@ exports.getFavoriteWorkouts = async (req, res) => {
     return res.status(500).send({ success: false, error });
   }
 };
+
+exports.getWorkouts = async (req, res) => {
+  try {
+    const workouts = await Users.getWorkouts(req.user.id);
+
+    res.send({ success: true, workouts: workouts.workouts });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ success: false, error });
+  }
+}

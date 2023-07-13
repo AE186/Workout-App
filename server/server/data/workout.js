@@ -25,6 +25,24 @@ const select = {
       },
     },
   },
+  comments: {
+    select: {
+      id: true,
+      comment: true,
+      removed: true,
+      userId: true,
+      createdAt: true,
+      replies: {
+        select: {
+          id: true,
+          reply: true,
+          removed: true,
+          userId: true,
+          createdAt: true,
+        },
+      },
+    },
+  },
 };
 
 const dataCreation = (

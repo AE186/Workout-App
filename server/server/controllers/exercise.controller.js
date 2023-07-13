@@ -9,7 +9,7 @@ exports.createExercise = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: error.details.map(({ message }) => message),
+        error: "Please provide valid inputs",
       });
 
     if (await Exercises.getWithName(name))
@@ -46,7 +46,7 @@ exports.updateExercise = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: error.details.map(({ message }) => message),
+        error: "Please provide valid inputs",
       });
 
     if (!(await Exercises.getWithId(id)))

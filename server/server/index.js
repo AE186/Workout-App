@@ -9,10 +9,9 @@ app.use(cors());
 app.use(express.json());
 
 // Use all routes in ./routes directory
-fs.readdir("./src/routes", (err, files) => {
+fs.readdir("./server/routes", (err, files) => {
   files.forEach((file) => {
     app.use("/api/", require("./routes/" + file));
-    console.log(`Server using ${file}`);
   });
   console.log("All Routes Loaded")
 });
