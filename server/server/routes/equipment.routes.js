@@ -1,15 +1,15 @@
 const express = require("express");
 const controller = require("../controllers/equipment.controller");
-const auth = require("../middleware/auth");
+const verify = require("../middleware/verify");
 
 const router = express.Router();
 
-router.post("/equipments", auth.verifyToken, controller.createEquipment);
+router.post("/equipments", verify, controller.createEquipment);
 
 router.get("/equipments", controller.getEquipment);
 
-router.put("/equipments/:id", auth.verifyToken, controller.updateEquipment);
+router.put("/equipments/:id", verify, controller.updateEquipment);
 
-router.delete("/equipments/:id", auth.verifyToken, controller.deleteEquipment);
+router.delete("/equipments/:id", verify, controller.deleteEquipment);
 
 module.exports = router;

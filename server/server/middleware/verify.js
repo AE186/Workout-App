@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 const Users = require("../data/user");
 
-exports.verifyToken = async (req, res, next) => {
+const verify = async (req, res, next) => {
   try {
     const token = req.headers["access-token"];
 
@@ -23,3 +23,5 @@ exports.verifyToken = async (req, res, next) => {
     res.status(500).send({ success: false, error: "Access Denied" });
   }
 };
+
+module.exports = verify

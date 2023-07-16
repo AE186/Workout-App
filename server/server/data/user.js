@@ -141,3 +141,36 @@ exports.getWorkouts = async (id) => {
 
   return favorites;
 };
+
+exports.addImgURL = async (id, url) => {
+  const user = await db.user.update({
+    where: { id: id },
+    data: {
+      img: url,
+    },
+  });
+
+  return user;
+};
+
+exports.removeImgURL = async (id) => {
+  const user = await db.user.update({
+    where: { id: id },
+    data: {
+      img: "",
+    },
+  });
+
+  return user;
+};
+
+exports.getImgURL = async (id) => {
+  const user = await db.user.findFirst({
+    where: { id: id },
+    select: {
+      img: true,
+    },
+  });
+
+  return user;
+};

@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const Users = require("../data/user");
 const Workouts = require("../data/workout");
 const validation = require("../validation/user");
+const storageService = require("../services/storage.service");
 
 exports.signup = async (req, res) => {
   const { name, email, password, dob } = req.body;
@@ -133,12 +134,88 @@ exports.getFavoriteWorkouts = async (req, res) => {
 };
 
 exports.getWorkouts = async (req, res) => {
+  const { email } = req.params;
+
   try {
-    const workouts = await Users.getWorkouts(req.user.id);
+    const user = await Users.getUserWithEmail(email);
+    if (!user)
+      return res.status(401).send({ success: false, error: "User Not Found" });
+
+    const workouts = await Users.getWorkouts(user.id);
 
     res.send({ success: true, workouts: workouts.workouts });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ success: false, error });
   }
-}
+};
+
+exports.uploadProfilePic = async (req, res) => {
+  try {
+    const type = req.file.originalname.split(".")[1];
+    const filename = `${req.user.id}_${Date.now()}.${type}`;
+
+    const user = await Users.getImgURL(req.user.id);
+    if (user.img !== "") storageService.delete(user.img);
+    
+    await storageService.upload(filename, req.file.buffer);
+    await Users.addImgURL(req.user.id, filename);
+
+    res.send({
+      success: true,
+      message: "Profile Picture successfully uploaded",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ success: false, error: "Server Side Error" });
+  }
+};
+
+exports.removeProfilePic = async (req, res) => {
+  try {
+    const user = await Users.getImgURL(req.user.id);
+
+    if (user.img === "")
+      return res
+        .status(401)
+        .send({ success: false, error: "Image does not Exist" });
+
+    await storageService.delete(user.img);
+    await Users.removeImgURL(req.user.id);
+
+    res.send({
+      success: true,
+      message: "Profile Picture removed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ success: false, error: "Server Side Error" });
+  }
+};
+
+exports.getProfilePic = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const user = await Users.getUserWithEmail(email);
+    if (!user)
+      return res.status(401).send({ success: false, error: "User Not Found" });
+    
+    const profile = await Users.getImgURL(user.id);
+
+    if (profile.img === "")
+      return res
+        .status(401)
+        .send({ success: false, error: "Image does not Exist" });
+
+    const url = await storageService.get(profile.img);
+
+    res.send({
+      success: true,
+      url,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ success: false, error: "Server Side Error" });
+  }
+};

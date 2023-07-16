@@ -1,6 +1,7 @@
 const express = require("express");
 const controller = require("../controllers/user.controller");
-const auth = require("../middleware/auth");
+const verify = require("../middleware/verify");
+const uploadFile = require("../middleware/uploadFile");
 
 const router = express.Router();
 
@@ -10,20 +11,26 @@ router.post("/login", controller.login);
 
 router.get("/auth/:token", controller.getUser);
 
-router.get("/user/workouts", auth.verifyToken, controller.getWorkouts);
+router.get("/user/workouts/:email", controller.getWorkouts);
+
+router.patch("/user/favorites/add/:id", verify, controller.addFavoriteWorkout);
 
 router.patch(
-  "/favorite/add/:id",
-  [auth.verifyToken],
-  controller.addFavoriteWorkout
-);
-
-router.patch(
-  "/favorite/remove/:id",
-  [auth.verifyToken],
+  "/user/favorites/remove/:id",
+  verify,
   controller.removeFavoriteWorkout
 );
 
-router.get("/favorite", [auth.verifyToken], controller.getFavoriteWorkouts);
+router.get("/user/favorites", verify, controller.getFavoriteWorkouts);
+
+router.get("/user/profile-pic/:email", controller.getProfilePic);
+
+router.post(
+  "/user/profile-pic",
+  [verify, uploadFile],
+  controller.uploadProfilePic
+);
+
+router.delete("/user/profile-pic", verify, controller.removeProfilePic);
 
 module.exports = router;

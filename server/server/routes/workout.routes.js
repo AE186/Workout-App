@@ -1,35 +1,27 @@
 const express = require("express");
 const controller = require("../controllers/workout.controller");
-const auth = require("../middleware/auth");
+const verify = require("../middleware/verify");
 
 const router = express.Router();
 
-router.post("/workouts/", auth.verifyToken, controller.createWorkout);
+router.post("/workouts/", verify, controller.createWorkout);
 
 router.get("/workouts/", controller.getWorkout);
 
-router.put("/workouts/:workoutId", auth.verifyToken, controller.updateWorkout);
+router.put("/workouts/:workoutId", verify, controller.updateWorkout);
 
-router.delete(
-  "/workouts/:workoutId",
-  auth.verifyToken,
-  controller.deleteWorkout
-);
+router.delete("/workouts/:workoutId", verify, controller.deleteWorkout);
 
-router.post("/comment/:workoutId", auth.verifyToken, controller.addComment);
+router.post("/comment/:workoutId", verify, controller.addComment);
 
 router.delete(
   "/comment/:workoutId&:commentId",
-  auth.verifyToken,
+  verify,
   controller.removeComment
 );
 
-router.post("/reply/:commentId", auth.verifyToken, controller.addReply);
+router.post("/reply/:commentId", verify, controller.addReply);
 
-router.delete(
-  "/reply/:commentId&:replyId",
-  auth.verifyToken,
-  controller.removeReply
-);
+router.delete("/reply/:commentId&:replyId", verify, controller.removeReply);
 
 module.exports = router;
