@@ -9,7 +9,7 @@ exports.createEquipment = async (req, res) => {
     if (error)
       return res.status(400).send({
         success: false,
-        error: c,
+        error: "Please provide valid inputs"
       });
 
     if (await Equipments.getWithName(name))
@@ -22,7 +22,7 @@ exports.createEquipment = async (req, res) => {
     return res.send({ success: true, equipment });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error:"Server Side Error" });
   }
 };
 
@@ -33,7 +33,7 @@ exports.getEquipment = async (req, res) => {
     return res.send({ success: true, equipments });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -64,7 +64,7 @@ exports.updateEquipment = async (req, res) => {
     res.send({ success: true, equipment });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -82,6 +82,6 @@ exports.deleteEquipment = async (req, res) => {
     res.send({ success: true, message: "Equipment deleted successfully" });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };

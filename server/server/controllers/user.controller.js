@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
     return res.send({ success: true, message: "User successfully created" });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
     return res.send({ success: true, token });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -82,7 +82,7 @@ exports.getUser = async (req, res) => {
     res.send({ success: true, user });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -100,7 +100,7 @@ exports.addFavoriteWorkout = async (req, res) => {
     res.send({ success: true, message: "Favorite Workout added" });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -118,7 +118,7 @@ exports.removeFavoriteWorkout = async (req, res) => {
     res.send({ success: true, message: "Favorite Workout removed" });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -129,7 +129,7 @@ exports.getFavoriteWorkouts = async (req, res) => {
     res.send({ success: true, workouts: workouts.favorites });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -146,7 +146,7 @@ exports.getWorkouts = async (req, res) => {
     res.send({ success: true, workouts: workouts.workouts });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 

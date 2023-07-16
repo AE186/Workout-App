@@ -5,7 +5,6 @@ const Muscles = require("../data/muscle");
 const Comments = require("../data/comment");
 const Replies = require("../data/reply");
 const validation = require("../validation/workout");
-const { comment } = require("../data/db");
 
 exports.createWorkout = async (req, res) => {
   const { name, desc, muscles, equipments, tips, plans } = req.body;
@@ -45,7 +44,7 @@ exports.createWorkout = async (req, res) => {
     res.send({ success: true, workout });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -56,7 +55,7 @@ exports.getWorkout = async (req, res) => {
     res.send({ success: true, workouts });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -105,7 +104,7 @@ exports.updateWorkout = async (req, res) => {
     res.send({ success: true, workout });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -123,7 +122,7 @@ exports.deleteWorkout = async (req, res) => {
     res.send({ success: true, message: "Workout deleted" });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 

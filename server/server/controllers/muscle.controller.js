@@ -1,87 +1,87 @@
 const Muscles = require("../data/muscle");
-const validation = require("../validation/muscle");
+const validation = require("../validation/exercise");
 
-exports.createMuscle = async (req, res) => {
+exports.createExercise = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const { error } = await validation.muscle.validate(req.body);
+    const { error } = await validation.exercise.validate(req.body);
     if (error)
       return res.status(400).send({
         success: false,
         error: "Please provide valid inputs",
       });
 
-    if (await Muscles.getWithName(name))
+    if (await Exercises.getWithName(name))
       return res
         .status(400)
-        .send({ success: false, error: "Muscle group already exists" });
+        .send({ success: false, error: "Exercise Already Exists" });
 
-    const muscle = await Muscles.create(name);
+    const exercise = await Exercises.create(name);
 
-    res.send({ success: true, muscle });
+    res.send({ success: true, exercise });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
-exports.getMuscle = async (req, res) => {
+exports.getExercise = async (req, res) => {
   try {
-    const muscles = await Muscles.getAll();
+    const exercises = await Exercises.getAll();
 
-    res.send({ success: true, muscles });
+    res.send({ success: true, exercises });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
-exports.updateMuscle = async (req, res) => {
+exports.updateExercise = async (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
 
   try {
-    const { error } = await validation.muscle.validate(req.body);
+    const { error } = await validation.exercise.validate(req.body);
     if (error)
       return res.status(400).send({
         success: false,
         error: "Please provide valid inputs",
       });
 
-    if (!(await Muscles.getWithId(id)))
+    if (!(await Exercises.getWithId(id)))
       return res
         .status(400)
-        .send({ success: false, error: "Muscles group Not Found" });
+        .send({ success: false, error: "Exercise Not Found!" });
 
-    if (await Muscles.getWithName(name))
+    if (await Exercises.getWithName(name))
       return res
         .status(400)
-        .send({ success: false, error: "Muscle group already exists" });
+        .send({ success: false, error: "Exercise Already Exists" });
 
-    const muscle = await Muscles.update(id, name);
+    const exercise = await Exercises.update(id, name);
 
-    res.send({ success: true, muscle });
+    res.send({ success: true, exercise });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
-exports.deleteMuscle = async (req, res) => {
+exports.deleteExercise = async (req, res) => {
   const { id } = req.params;
 
   try {
-    if (!(await Muscles.getWithId(id)))
+    if (!(await Exercises.getWithId(id)))
       return res
         .status(400)
-        .send({ success: false, error: "Muscles group Not Found" });
+        .send({ success: false, error: "Exercise Not Found!" });
 
-    await Muscles.delete(id);
+    await Exercises.delete(id);
 
-    res.send({ success: true, message: "Muscle group Deleted" });
+    res.send({ success: true, message: "Exercise Deleted" });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };

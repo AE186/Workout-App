@@ -22,7 +22,7 @@ exports.createExercise = async (req, res) => {
     res.send({ success: true, exercise });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -33,7 +33,7 @@ exports.getExercise = async (req, res) => {
     res.send({ success: true, exercises });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -64,7 +64,7 @@ exports.updateExercise = async (req, res) => {
     res.send({ success: true, exercise });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error: "Server Side Error" });
   }
 };
 
@@ -82,6 +82,6 @@ exports.deleteExercise = async (req, res) => {
     res.send({ success: true, message: "Exercise Deleted" });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ success: false, error });
+    return res.status(500).send({ success: false, error:"Server Side Error" });
   }
 };
