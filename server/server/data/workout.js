@@ -4,14 +4,12 @@ const select = {
   id: true,
   name: true,
   desc: true,
+  user: {
+    select: { email: true }
+  },
   muscles: true,
   equipments: true,
-  tips: {
-    select: {
-      id: true,
-      tip: true,
-    },
-  },
+  tips: true,
   plans: {
     select: {
       id: true,
@@ -20,29 +18,33 @@ const select = {
       exercise: {
         select: {
           id: true,
-          name: true,
-        },
-      },
-    },
+          name: true
+        }
+      }
+    }
   },
   comments: {
     select: {
       id: true,
       comment: true,
       removed: true,
-      userId: true,
+      user: {
+        select: { email: true }
+      },
       createdAt: true,
       replies: {
         select: {
           id: true,
           reply: true,
           removed: true,
-          userId: true,
-          createdAt: true,
-        },
-      },
-    },
-  },
+          user: {
+            select: { email: true }
+          },
+          createdAt: true
+        }
+      }
+    }
+  }
 };
 
 const dataCreation = (

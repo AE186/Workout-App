@@ -6,8 +6,8 @@ exports.create = async (name, email, password, dob) => {
       name: name,
       email: email,
       password: password,
-      dob: dob,
-    },
+      dob: dob
+    }
   });
 
   return user;
@@ -16,8 +16,8 @@ exports.create = async (name, email, password, dob) => {
 exports.checkUserExists = async (email) => {
   const user = await db.user.findFirst({
     where: {
-      email: email,
-    },
+      email: email
+    }
   });
 
   return users ? true : false;
@@ -26,8 +26,8 @@ exports.checkUserExists = async (email) => {
 exports.getUserWithEmail = async (email) => {
   const user = await db.user.findFirst({
     where: {
-      email: email,
-    },
+      email: email
+    }
   });
 
   return user;
@@ -36,14 +36,13 @@ exports.getUserWithEmail = async (email) => {
 exports.getUserWithId = async (id) => {
   const user = await db.user.findUniqueOrThrow({
     where: {
-      id: id,
+      id: id
     },
     select: {
-      id: true,
       name: true,
       email: true,
-      dob: true,
-    },
+      dob: true
+    }
   });
 
   return user;
@@ -52,26 +51,26 @@ exports.getUserWithId = async (id) => {
 exports.addFavoriteWorkout = async (id, workoutId) => {
   await db.user.update({
     where: {
-      id: id,
+      id: id
     },
     data: {
       favorites: {
-        connect: { id: workoutId },
-      },
-    },
+        connect: { id: workoutId }
+      }
+    }
   });
 };
 
 exports.removeFavoriteWorkout = async (id, workoutId) => {
   await db.user.update({
     where: {
-      id: id,
+      id: id
     },
     data: {
       favorites: {
-        disconnect: { id: workoutId },
-      },
-    },
+        disconnect: { id: workoutId }
+      }
+    }
   });
 };
 
@@ -79,7 +78,9 @@ const select = {
   id: true,
   name: true,
   desc: true,
-  userId: true,
+  user: {
+    select: { email: true }
+  },
   muscles: true,
   equipments: true,
   tips: true,
@@ -91,29 +92,33 @@ const select = {
       exercise: {
         select: {
           id: true,
-          name: true,
-        },
-      },
-    },
+          name: true
+        }
+      }
+    }
   },
   comments: {
     select: {
       id: true,
       comment: true,
       removed: true,
-      userId: true,
+      user: {
+        select: { email: true }
+      },
       createdAt: true,
       replies: {
         select: {
           id: true,
           reply: true,
           removed: true,
-          userId: true,
-          createdAt: true,
-        },
-      },
-    },
-  },
+          user: {
+            select: { email: true }
+          },
+          createdAt: true
+        }
+      }
+    }
+  }
 };
 
 exports.getFavoriteWorkouts = async (id) => {
@@ -121,9 +126,9 @@ exports.getFavoriteWorkouts = async (id) => {
     where: { id: id },
     select: {
       favorites: {
-        select,
-      },
-    },
+        select
+      }
+    }
   });
 
   return favorites;
@@ -134,9 +139,9 @@ exports.getWorkouts = async (id) => {
     where: { id: id },
     select: {
       workouts: {
-        select,
-      },
-    },
+        select
+      }
+    }
   });
 
   return favorites;
@@ -146,8 +151,8 @@ exports.addImgURL = async (id, url) => {
   const user = await db.user.update({
     where: { id: id },
     data: {
-      img: url,
-    },
+      img: url
+    }
   });
 
   return user;
@@ -157,8 +162,8 @@ exports.removeImgURL = async (id) => {
   const user = await db.user.update({
     where: { id: id },
     data: {
-      img: "",
-    },
+      img: ""
+    }
   });
 
   return user;
@@ -168,8 +173,8 @@ exports.getImgURL = async (id) => {
   const user = await db.user.findFirst({
     where: { id: id },
     select: {
-      img: true,
-    },
+      img: true
+    }
   });
 
   return user;

@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const Users = require("../data/user");
 
 const verify = async (req, res, next) => {
@@ -6,7 +6,7 @@ const verify = async (req, res, next) => {
     const token = req.headers["access-token"];
 
     const userToken = jwt.verify(token, process.env.SECRET_TOKEN);
-    
+
     if (!userToken.id)
       return res.status(400).send({ success: false, error: "Invalid Token" });
 
@@ -16,6 +16,7 @@ const verify = async (req, res, next) => {
       return res.status(400).send({ success: false, error: "User Not Found" });
 
     req.user = user;
+    req.user.id = userToken.id;
 
     next();
   } catch (error) {
@@ -24,4 +25,4 @@ const verify = async (req, res, next) => {
   }
 };
 
-module.exports = verify
+module.exports = verify;
