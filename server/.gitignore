@@ -1,4 +1,4 @@
 node_modules
-/src/prisma/migrations/
+/server/prisma/migrations/
 
 .env
